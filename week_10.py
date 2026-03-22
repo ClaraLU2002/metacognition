@@ -1264,8 +1264,7 @@ def render_task(problem: str, task_no: int) -> None:
             if problem == "Arbitrage":
                 st.markdown(ARBITRAGE_STEP_TEXT[task_no]["step4"])
                 st.markdown(
-                    """> **Questions:**  
-    > What did I do?  
+                    """> **Questions:**   
     > What result(s) did I observe?  
     > What should I do next?"""
                 )
@@ -1281,7 +1280,6 @@ def render_task(problem: str, task_no: int) -> None:
                 )
                 st.markdown(
                     """> **Questions:**  
-    > What did I do?  
     > What result(s) did I observe?  
     > What should I do next?"""
                 )
