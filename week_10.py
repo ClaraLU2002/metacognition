@@ -1111,30 +1111,22 @@ def render_plan(problem: str) -> None:
             st.markdown(get_plan_hint_text(problem))
 
         with st.expander("A2. My Role and AI's Role", expanded=True):
-            st.markdown(
-                """
-        Before using AI, think about how you want to share the work across the process.
+                st.markdown(
+                    """
+    Before using AI, think about how you want to share the work across the process.
 
-        - What should I be responsible for?
-        - What can AI help with?
-        - Why does this division make sense for this problem?
-        """
-            )
+    - What should I be responsible for?
+    - What can AI help with?
+    - Why does this division make sense for this problem?
+    """
+                )
 
-            st.markdown(
-                """
-                <div class="role-example-box">
-                    <div class="role-example-title">Example </div>
-                    <div class="role-example-text">
-                        My role is to understand the arbitrage problem, decide how to model it, and check whether the final result makes sense mathematically.
-                        I should be responsible for identifying what counts as arbitrage, interpreting the exchange-rate relationships, and judging whether the solution is reasonable.<br><br>
-                        AI can help me by explaining possible modelling methods, suggesting algorithm ideas, helping me write or debug code, and checking whether my implementation matches the mathematical goal.<br><br>
-                        This division makes sense because the key responsibility of understanding and evaluating the problem should remain mine, while AI can support me with technical suggestions and coding assistance.
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+                st.text_area(
+                    "My role and AI's role",
+                    key=f"{p}_a2_role_ai_role",
+                    height=180,
+                    placeholder="Write here...",
+                )
 
     else:
         with st.expander("A1. Task Decomposition", expanded=True):
@@ -1247,12 +1239,18 @@ def render_task(problem: str, task_no: int) -> None:
     with st.expander("Step 2. Prompt AI and Evaluate the Response", expanded=False):
         if problem == "Arbitrage":
             st.markdown(ARBITRAGE_STEP_TEXT[task_no]["step2"])
+            st.text_area(
+                "Write a prompt to AI for this specific task, and briefly note how you evaluated the response.",
+                key=f"{prefix}_step2_prompt_eval",
+                height=180,
+                placeholder="Summarize how useful the AI response was...",
+            )
         else:
             st.text_area(
                 "Write a prompt to AI for this specific task.",
                 key=f"{prefix}_step2_prompt_eval",
                 height=180,
-                placeholder="Write your prompt, summarize the AI response...",
+                placeholder="Summarize the AI response...",
             )
 
     with st.expander("Step 3. Evaluate the Response and Decide What to Do Next", expanded=False):
@@ -1263,24 +1261,36 @@ def render_task(problem: str, task_no: int) -> None:
         )
 
     with st.expander("Step 4. Implement, Test, and Interpret", expanded=False):
-        if problem == "Arbitrage":
-            st.markdown(ARBITRAGE_STEP_TEXT[task_no]["step4"])
-        else:
-            st.markdown(
-                """Now apply the idea, method, or response that you decided to use. Record what you tested, what you expected, what actually happened, and what the result means for this task."""
-            )
-            st.markdown(
-                """> **Questions:**  
-> What did I do?  
-> What result(s) did I observe?  
-> What should I do next?"""
-            )
-            st.text_area(
-                "Write here:",
-                key=f"{prefix}_step4_implement_test_interpret",
-                height=220,
-                placeholder="Describe implementation, observed results, and interpretation...",
-            )
+            if problem == "Arbitrage":
+                st.markdown(ARBITRAGE_STEP_TEXT[task_no]["step4"])
+                st.markdown(
+                    """> **Questions:**  
+    > What did I do?  
+    > What result(s) did I observe?  
+    > What should I do next?"""
+                )
+                st.text_area(
+                    "Write here:",
+                    key=f"{prefix}_step4_implement_test_interpret",
+                    height=220,
+                    placeholder="Describe what you implemented, tested, observed, and how you interpreted the result...",
+                )
+            else:
+                st.markdown(
+                    """Now apply the idea, method, or response that you decided to use. Record what you tested, what you expected, what actually happened, and what the result means for this task."""
+                )
+                st.markdown(
+                    """> **Questions:**  
+    > What did I do?  
+    > What result(s) did I observe?  
+    > What should I do next?"""
+                )
+                st.text_area(
+                    "Write here:",
+                    key=f"{prefix}_step4_implement_test_interpret",
+                    height=220,
+                    placeholder="Describe implementation, observed results, and interpretation...",
+                )
 
     with st.expander(
         "Based on my evaluation of the result, do I need to revise this task from the beginning?",
@@ -1317,26 +1327,37 @@ def render_task(problem: str, task_no: int) -> None:
                 height=220,
                 placeholder="Write revisions here...",
             )
-
-    with st.expander("Step 6. Reflect on This Task", expanded=True):
-        if problem == "Arbitrage":
-            st.markdown(ARBITRAGE_STEP_TEXT[task_no]["step6"])
-        else:
-            st.markdown(
-                """Finally, reflect on what you learned from this task. Focus on what you understood better about the problem, how AI supported or failed to support you, and what you would do differently in the next task."""
-            )
-            st.markdown(
-                """> **Questions:**  
-> What did I learn about the problem from this task?  
-> What did I learn about using AI from this task?  
-> What would I do differently in the next task?"""
-            )
-            st.text_area(
-                "Write here:",
-                key=f"{prefix}_step6_reflect",
-                height=220,
-                placeholder="Write your reflection here...",
-            )
+    with st.expander("Step 6. Reflect on This Task", expanded=False):
+            if problem == "Arbitrage":
+                st.markdown(ARBITRAGE_STEP_TEXT[task_no]["step6"])
+                st.markdown(
+                    """> **Questions:**  
+    > What did I learn about the problem from this task?  
+    > What did I learn about using AI from this task?  
+    > What would I do differently in the next task?"""
+                )
+                st.text_area(
+                    "Write here:",
+                    key=f"{prefix}_step6_reflect",
+                    height=220,
+                    placeholder="Write your reflection here...",
+                )
+            else:
+                st.markdown(
+                    """Finally, reflect on what you learned from this task. Focus on what you understood better about the problem, how AI supported or failed to support you, and what you would do differently in the next task."""
+                )
+                st.markdown(
+                    """> **Questions:**  
+    > What did I learn about the problem from this task?  
+    > What did I learn about using AI from this task?  
+    > What would I do differently in the next task?"""
+                )
+                st.text_area(
+                    "Write here:",
+                    key=f"{prefix}_step6_reflect",
+                    height=220,
+                    placeholder="Write your reflection here...",
+                )
 
     col1, col2 = st.columns([1, 3])
     with col1:
