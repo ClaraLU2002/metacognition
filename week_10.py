@@ -923,178 +923,124 @@ for problem in PROBLEMS:
 def export_dataframe() -> pd.DataFrame:
     rows = []
 
+    base_columns = {
+        "problem": "",
+        "section": "",
+        "task_no": "",
+        "planning_intro": "",
+        "a1_task_decomposition": "",
+        "h1_need_planning_hint": "",
+        "h1_planning_hint_notes": "",
+        "a2_role_ai_role": "",
+        "task_title": "",
+        "step1_define": "",
+        "need_hint": "",
+        "hint_notes": "",
+        "step2_prompt_eval": "",
+        "step3_decision": "",
+        "step3_notes": "",
+        "step4_implement_test_interpret": "",
+        "revise_from_beginning": "",
+        "step5_revise": "",
+        "step6_reflect": "",
+        "final_reflection": "",
+        "revisit_q1": "",
+        "revisit_q2": "",
+        "revisit_q3": "",
+        "revisit_q4": "",
+        "revisit_q5": "",
+        "revisit_q6": "",
+        "revisit_q7": "",
+        "revisit_q8": "",
+    }
+
     for problem in PROBLEMS:
         p = key_prefix(problem)
         num_tasks = st.session_state.get(f"{p}_num_tasks", 0)
 
-        if problem == "Arbitrage":
-            rows.append(
+        # --------------------------
+        # Planning row
+        # --------------------------
+        planning_row = base_columns.copy()
+        planning_row.update(
+            {
+                "problem": problem,
+                "section": "planning",
+                "task_no": "",
+                "planning_intro": st.session_state.get(f"{p}_planning_intro", ""),
+                "a1_task_decomposition": st.session_state.get(f"{p}_a1_task_decomposition", ""),
+                "h1_need_planning_hint": st.session_state.get(f"{p}_h1_need_planning_hint", ""),
+                "h1_planning_hint_notes": st.session_state.get(f"{p}_h1_planning_hint_notes", ""),
+                "a2_role_ai_role": st.session_state.get(f"{p}_a2_role_ai_role", ""),
+            }
+        )
+        rows.append(planning_row)
+
+        # --------------------------
+        # Task rows
+        # --------------------------
+        for i in range(1, num_tasks + 1):
+            prefix = f"{p}_task_{i}"
+            init_task_state(problem, i)
+
+            task_row = base_columns.copy()
+            task_row.update(
                 {
                     "problem": problem,
-                    "section": "planning",
-                    "task_no": "",
-                    "final_reflection": "",
+                    "section": "task",
+                    "task_no": i,
+                    "task_title": st.session_state.get(f"{prefix}_title", ""),
+                    "step1_define": st.session_state.get(f"{prefix}_step1_define", ""),
+                    "need_hint": st.session_state.get(f"{prefix}_need_hint", ""),
+                    "hint_notes": st.session_state.get(f"{prefix}_hint_notes", ""),
+                    "step2_prompt_eval": st.session_state.get(f"{prefix}_step2_prompt_eval", ""),
+                    "step3_decision": st.session_state.get(f"{prefix}_step3_decision", ""),
+                    "step3_notes": st.session_state.get(f"{prefix}_step3_notes", ""),
+                    "step4_implement_test_interpret": st.session_state.get(
+                        f"{prefix}_step4_implement_test_interpret", ""
+                    ),
+                    "revise_from_beginning": st.session_state.get(f"{prefix}_revise_from_beginning", ""),
+                    "step5_revise": st.session_state.get(f"{prefix}_step5_revise", ""),
+                    "step6_reflect": st.session_state.get(f"{prefix}_step6_reflect", ""),
                 }
             )
+            rows.append(task_row)
 
-            for i in range(1, num_tasks + 1):
-                rows.append(
-                    {
-                        "problem": problem,
-                        "section": "task",
-                        "task_no": i,
-                        "final_reflection": "",
-                    }
-                )
+        # --------------------------
+        # Reflection row
+        # --------------------------
+        reflection_row = base_columns.copy()
+        reflection_row.update(
+            {
+                "problem": problem,
+                "section": "reflection",
+                "task_no": "",
+                "final_reflection": st.session_state.get(f"{p}_final_reflection", ""),
+            }
+        )
+        rows.append(reflection_row)
 
-            rows.append(
+        # --------------------------
+        # Revisiting row (Hawker only)
+        # --------------------------
+        if problem == "Hawker Center":
+            revisiting_row = base_columns.copy()
+            revisiting_row.update(
                 {
                     "problem": problem,
-                    "section": "reflection",
+                    "section": "revisiting",
                     "task_no": "",
-                    "final_reflection": st.session_state.get(f"{p}_final_reflection", ""),
+                    "revisit_q1": st.session_state.get(f"{p}_revisit_q1", ""),
+                    "revisit_q2": st.session_state.get(f"{p}_revisit_q2", ""),
+                    "revisit_q3": st.session_state.get(f"{p}_revisit_q3", ""),
+                    "revisit_q4": st.session_state.get(f"{p}_revisit_q4", ""),
+                    "revisit_q5": st.session_state.get(f"{p}_revisit_q5", ""),
+                    "revisit_q6": st.session_state.get(f"{p}_revisit_q6", ""),
+                    "revisit_q7": st.session_state.get(f"{p}_revisit_q7", ""),
+                    "revisit_q8": st.session_state.get(f"{p}_revisit_q8", ""),
                 }
             )
-
-        else:
-            rows.append(
-                {
-                    "problem": problem,
-                    "section": "planning",
-                    "task_no": "",
-                    "planning_intro": st.session_state.get(f"{p}_planning_intro", ""),
-                    "a1_task_decomposition": st.session_state.get(f"{p}_a1_task_decomposition", ""),
-                    "h1_need_planning_hint": st.session_state.get(f"{p}_h1_need_planning_hint", ""),
-                    "h1_planning_hint_notes": st.session_state.get(f"{p}_h1_planning_hint_notes", ""),
-                    "a2_role_ai_role": st.session_state.get(f"{p}_a2_role_ai_role", ""),
-                    "task_title": "",
-                    "step1_define": "",
-                    "need_hint": "",
-                    "hint_notes": "",
-                    "step2_prompt_eval": "",
-                    "step3_decision": "",
-                    "step3_notes": "",
-                    "step4_implement_test_interpret": "",
-                    "revise_from_beginning": "",
-                    "step5_revise": "",
-                    "step6_reflect": "",
-                    "final_reflection": "",
-                    "revisit_q1": "",
-                    "revisit_q2": "",
-                    "revisit_q3": "",
-                    "revisit_q4": "",
-                    "revisit_q5": "",
-                    "revisit_q6": "",
-                    "revisit_q7": "",
-                    "revisit_q8": "",
-                }
-            )
-
-            for i in range(1, num_tasks + 1):
-                prefix = f"{p}_task_{i}"
-                init_task_state(problem, i)
-
-                rows.append(
-                    {
-                        "problem": problem,
-                        "section": "task",
-                        "task_no": i,
-                        "planning_intro": "",
-                        "a1_task_decomposition": "",
-                        "h1_need_planning_hint": "",
-                        "h1_planning_hint_notes": "",
-                        "a2_role_ai_role": "",
-                        "task_title": st.session_state.get(f"{prefix}_title", ""),
-                        "step1_define": st.session_state.get(f"{prefix}_step1_define", ""),
-                        "need_hint": st.session_state.get(f"{prefix}_need_hint", ""),
-                        "hint_notes": st.session_state.get(f"{prefix}_hint_notes", ""),
-                        "step2_prompt_eval": st.session_state.get(f"{prefix}_step2_prompt_eval", ""),
-                        "step3_decision": st.session_state.get(f"{prefix}_step3_decision", ""),
-                        "step3_notes": st.session_state.get(f"{prefix}_step3_notes", ""),
-                        "step4_implement_test_interpret": st.session_state.get(
-                            f"{prefix}_step4_implement_test_interpret", ""
-                        ),
-                        "revise_from_beginning": st.session_state.get(f"{prefix}_revise_from_beginning", ""),
-                        "step5_revise": st.session_state.get(f"{prefix}_step5_revise", ""),
-                        "step6_reflect": st.session_state.get(f"{prefix}_step6_reflect", ""),
-                        "final_reflection": "",
-                        "revisit_q1": "",
-                        "revisit_q2": "",
-                        "revisit_q3": "",
-                        "revisit_q4": "",
-                        "revisit_q5": "",
-                        "revisit_q6": "",
-                        "revisit_q7": "",
-                        "revisit_q8": "",
-                    }
-                )
-
-            rows.append(
-                {
-                    "problem": problem,
-                    "section": "reflection",
-                    "task_no": "",
-                    "planning_intro": "",
-                    "a1_task_decomposition": "",
-                    "h1_need_planning_hint": "",
-                    "h1_planning_hint_notes": "",
-                    "a2_role_ai_role": "",
-                    "task_title": "",
-                    "step1_define": "",
-                    "need_hint": "",
-                    "hint_notes": "",
-                    "step2_prompt_eval": "",
-                    "step3_decision": "",
-                    "step3_notes": "",
-                    "step4_implement_test_interpret": "",
-                    "revise_from_beginning": "",
-                    "step5_revise": "",
-                    "step6_reflect": "",
-                    "final_reflection": st.session_state.get(f"{p}_final_reflection", ""),
-                    "revisit_q1": "",
-                    "revisit_q2": "",
-                    "revisit_q3": "",
-                    "revisit_q4": "",
-                    "revisit_q5": "",
-                    "revisit_q6": "",
-                    "revisit_q7": "",
-                    "revisit_q8": "",
-                }
-            )
-
-            if problem == "Hawker Center":
-                rows.append(
-                    {
-                        "problem": problem,
-                        "section": "revisiting",
-                        "task_no": "",
-                        "planning_intro": "",
-                        "a1_task_decomposition": "",
-                        "h1_need_planning_hint": "",
-                        "h1_planning_hint_notes": "",
-                        "a2_role_ai_role": "",
-                        "task_title": "",
-                        "step1_define": "",
-                        "need_hint": "",
-                        "hint_notes": "",
-                        "step2_prompt_eval": "",
-                        "step3_decision": "",
-                        "step3_notes": "",
-                        "step4_implement_test_interpret": "",
-                        "revise_from_beginning": "",
-                        "step5_revise": "",
-                        "step6_reflect": "",
-                        "final_reflection": "",
-                        "revisit_q1": st.session_state.get(f"{p}_revisit_q1", ""),
-                        "revisit_q2": st.session_state.get(f"{p}_revisit_q2", ""),
-                        "revisit_q3": st.session_state.get(f"{p}_revisit_q3", ""),
-                        "revisit_q4": st.session_state.get(f"{p}_revisit_q4", ""),
-                        "revisit_q5": st.session_state.get(f"{p}_revisit_q5", ""),
-                        "revisit_q6": st.session_state.get(f"{p}_revisit_q6", ""),
-                        "revisit_q7": st.session_state.get(f"{p}_revisit_q7", ""),
-                        "revisit_q8": st.session_state.get(f"{p}_revisit_q8", ""),
-                    }
-                )
+            rows.append(revisiting_row)
 
     return pd.DataFrame(rows)
 
