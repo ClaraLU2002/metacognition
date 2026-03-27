@@ -373,11 +373,7 @@ REVISIT_ITEMS = [
 ]
 
 TASK_HINTS = {
-    "plan": """Hints: Possible planning stages
-
-Before you start solving the portfolio optimization problem, try to break the work into smaller and manageable steps. This helps you organize your thinking and avoid jumping directly into coding without understanding the workflow.
-
-A possible way to continue dividing the work is:
+    "plan": """A possible way to continue dividing the work:
 
 
 - Task 2: Compute returns and expected returns  
@@ -797,9 +793,10 @@ As you complete this section, please focus on:
 
 For example: 
 
-- Task 1: Pull the stock price data from yahoo finance  
-Download historical stock prices and organize them into a clean dataset.  
-Make sure the data is aligned by date and contains no obvious missing values.
+**Task 1: Pull the stock price data from yahoo finance**
+ 
+- Download historical stock prices and organize them into a clean dataset.  
+- Make sure the data is aligned by date and contains no obvious missing values.
 
 """
         )
@@ -850,7 +847,6 @@ Before using AI, think about how you want to share the work across the process.
         if st.session_state.get(f"{p}_plan_saved", False):
             st.success("Plan saved.")
 
-
 def render_task(task_no: int) -> None:
     p = key_prefix(PAGE_NAME)
     prefix = f"{p}_task_{task_no}"
@@ -858,12 +854,63 @@ def render_task(task_no: int) -> None:
 
     st.subheader(f"Task {task_no}")
 
-    with st.expander("Step 1. Define This Task", expanded=True):
+    if task_no == 1:
+        with st.expander("Task 1. Pull the stock price data from yahoo finance", expanded=True):
+            st.markdown(
+                """
+Please pull the Adj Close price from 1st January 2010 to 31st December 2017 for the following stocks:
+
+```python
+['HSBC', 'JPM', 'AAPL', 'WMT', 'AMZN', 'MSFT']
+"""
+)
+        with st.expander("Step 2. Prompt AI", expanded=False):
+            st.markdown(
+                    """Your prompt should focus only on this task. For example, you may ask AI to help you:
+
+- download the adjusted close prices
+
+- organize the data into a clean table
+
+- check for missing values
+"""
+)
+        with st.expander("Step 3. Continue Working on This Task", expanded=False):
+            st.markdown(
+                """
+                    #### Evaluate AI Prompt
+
+                    After you receive the AI response, think about:
+
+                    - whether it is clear and relevant?
+                    - whether it gives the kind of support you actually need?
+                    - Any revision needed?
+
+                    #### Implementation
+
+                    At this stage, continue your work by implementing the code in Jupyter Notebook.
+
+                    #### Evaluate the Solution and Interpretation
+
+                    After testing, think about:
+
+                    - What does this result show?
+                    - Does it actually answer the current task?
+                    - Any revision needed?
+
+                    #### Save the Task
+
+                    Continue your work carefully, then click **Save task** when you are ready to move on.
+                    """
+            )
+    else:
+        with st.expander("Step 1. Define This Task", expanded=True):
             st.markdown(
                 """Focus on this task from your own plan. Before using AI, first make clear what you are trying to do in this task and why it matters for solving the larger problem."""
             )
             st.markdown(
-                """> **Questions to think about:**  
+                """> **Questions to think about:** 
+                
 > What is my current task goal?  
 > Why does this task matter for the larger problem?  
 > What do I already think before using AI, and what am I still unsure about?"""
@@ -875,32 +922,32 @@ def render_task(task_no: int) -> None:
                 placeholder="Define this task clearly here...",
             )
 
-    with st.expander(f"Do you need hints for Task {task_no}?", expanded=False):
-        st.radio(
+        with st.expander(f"Do you need hints for Task {task_no}?", expanded=False):
+            st.radio(
             "Do you need hints?",
             YES_NO_OPTIONS,
             key=f"{prefix}_need_hint",
             horizontal=True,
         )
-        if st.session_state.get(f"{prefix}_need_hint", "No") == "Yes":
-            st.info(get_task_hint_text(task_no))
-            st.text_area(
+            if st.session_state.get(f"{prefix}_need_hint", "No") == "Yes":
+                st.info(get_task_hint_text(task_no))
+                st.text_area(
                 "Hint notes",
                 key=f"{prefix}_hint_notes",
                 height=120,
                 placeholder="Write any useful notes here...",
             )
 
-    with st.expander("Step 2. Prompt AI", expanded=False):
-        st.markdown(
+        with st.expander("Step 2. Prompt AI", expanded=False):
+            st.markdown(
             """
 Your prompt should be specific to your current subtask.
 Do not ask AI to solve everything at once.
 """
         )
 
-    with st.expander("Step 3. Continue Working on This Task", expanded=False):
-        st.markdown(
+        with st.expander("Step 3. Continue Working on This Task", expanded=False):
+            st.markdown(
             """
                 #### Evaluate AI Prompt
 
