@@ -377,12 +377,8 @@ TASK_HINTS = {
 
 Before you start solving the portfolio optimization problem, try to break the work into smaller and manageable steps. This helps you organize your thinking and avoid jumping directly into coding without understanding the workflow.
 
-A possible way to divide the work is:
+A possible way to continue dividing the work is:
 
-
-- Task 1: Collect and prepare stock price data  
-Download historical stock prices and organize them into a clean dataset.  
-Make sure the data is aligned by date and contains no obvious missing values.
 
 - Task 2: Compute returns and expected returns  
 Convert stock prices into daily returns.  
@@ -794,12 +790,17 @@ def render_plan() -> None:
             """
 Before you start solving the portfolio optimization problem, take time to break the work into smaller tasks and think carefully about how you want to work with AI. In this stage, your goal is not to solve everything yet. Instead, you should create a plan for how you will approach it.
 
-As you complete this section, focus on three things:
+As you complete this section, please focus on:
 
 - What smaller tasks do I need to complete to solve this optimization problem?
 - In what order should I attempt them?
 
-Try to answer based on your real thinking process. A good plan does not need to be perfect, but it should help you begin the task in a clear and thoughtful way.
+For example: 
+
+- Task 1: Pull the stock price data from yahoo finance  
+Download historical stock prices and organize them into a clean dataset.  
+Make sure the data is aligned by date and contains no obvious missing values.
+
 """
         )
         st.text_area(
